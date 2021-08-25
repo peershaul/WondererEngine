@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 int main(){
-    Window window(1280, 720, glm::vec3(0.5f, 0.7f, 0.3f) ,"OpenGL | Wonderer");
+    Window window(1280, 720, glm::vec3(0.5f, 0.7f, 0.3f) ,"OpenGL | WondererDev");
     if(!window.create())
         return -1;
     else

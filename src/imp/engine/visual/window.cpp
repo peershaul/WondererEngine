@@ -18,22 +18,30 @@ bool Window::create(){
         return false;
     }
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+
+
     // Trying to create new GLFW
     window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
-    if(!window){
+    if(window == NULL){
         this->terminate();
         return false;
     }
 
-    // Trying to initialize GLEW
-    if(!glewInit()){
-        this->terminate();
-        return false;
-    }
 
     // Making the newlly created window interactable trough OpenGL
     glfwMakeContextCurrent(window);
 
+    // Initializing GLEW
+    if(glewInit() != GLEW_OK){
+        ERR("GLEW has failed to initialize");
+        terminate();
+        return false;
+    }
     // Enabling 3D
     glEnable(GL_DEPTH_TEST);
 
