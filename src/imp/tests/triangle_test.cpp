@@ -2,6 +2,9 @@
 #include "../../headers/engine/debug/error.h"
 #include "../../headers/engine/visual/window.h"
 #include "../../headers/engine/visual/renderer/vertex_buffer.h"
+#include "../../headers/engine/visual/renderer/index_buffer.h"
+#include "../../headers/engine/visual/renderer/array_buffer.h"
+#include "../../headers/engine/visual/renderer/shader.h"
 
 #include <iostream>
 #include <GL/glew.h>
@@ -27,26 +30,27 @@ int main(){
         1, 2, 3
     };
 
-    unsigned int vao;
-    GLE(glGenVertexArrays(1, &vao));
-    GLE(glBindVertexArray(vao));
 
-    //VertexBuffer vb(vertices, sizeof(vertices), GL_STATIC_DRAW);
-    //vb.Bind();
-    unsigned int vbo;
-    GLE(glGenBuffers(1, &vbo));
-    GLE(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-    GLE(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+    Shader shader("res/test.vert", "res/test.frag");
 
-    GLE(glEnableVertexAttribArray(0));
-    GLE(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*) 0));
+    shader.Bind();
 
-    unsigned int ebo;
-    GLE(glGenBuffers(1, &ebo));
-    GLE(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
-    GLE(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+    ArrayBuffer va;
+    va.Bind();
 
-    while(!window.shouldClose()){
+    VertexBuffer vb(vertices, sizeof(vertices), GL_STATIC_DRAW);
+    va.setVertexBuffer(&vb);
+
+    unsigned int layout[] = {2};
+    va.setLayout(layout, sizeof(layout) / sizeof(int));
+
+    IndexBuffer ib(indices, sizeof(indices));
+    va.setIndexBuffer(&ib);
+
+    va.Bind();
+
+
+       while(!window.shouldClose()){
         window.clear();
 
         GLE(glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0));
@@ -54,6 +58,7 @@ int main(){
         window.endLoop();
     }
 
-   // vb.Delete();
+    va.DeleteAll();
+    shader.Delete();
     window.terminate();
 }
