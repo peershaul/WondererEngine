@@ -1,5 +1,6 @@
 #include "../../../../headers/engine/visual/renderer/array_buffer.h"
 #include "../../../../headers/engine/debug/error.h"
+#include "../../../../headers/engine/debug/logger.h"
 
 #include <GL/glew.h>
 
@@ -25,7 +26,6 @@ void ArrayBuffer::setLayout(unsigned int* layout_data, unsigned int layout_lengt
         layout.push_back(layout_data[i]);
         vertex_element_count += layout_data[i];
     }
-
     unsigned int stride = vertex_element_count * sizeof(float);
     unsigned int element_offset = 0;
     for(unsigned int i = 0; i < layout.size(); i++){
@@ -34,6 +34,7 @@ void ArrayBuffer::setLayout(unsigned int* layout_data, unsigned int layout_lengt
                                   (void*) (element_offset * sizeof(float))));
 
         element_offset += layout[i];
+        INFO("position %d is of: %d values", i, layout[i]);
     }
 }
 

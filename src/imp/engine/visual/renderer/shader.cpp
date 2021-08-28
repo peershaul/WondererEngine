@@ -39,7 +39,7 @@ unsigned int compile_shader(std::string path, GLenum type){
     GLE(glGetShaderiv(id, GL_COMPILE_STATUS, &success));
     if(!success){
         GLE(glGetShaderInfoLog(id, 512, NULL, infoLog));
-        ERR("Failed to compile \"%s\" error message: %s", path, infoLog);
+        ERR("Failed to compile, error message: %s", &infoLog);
         return 0;
     }
     return id;
@@ -66,7 +66,7 @@ Shader::Shader(std::string vertex_path, std::string fragment_path){
         GLE(glGetProgramiv(id, GL_LINK_STATUS, &success));
         if(!success){
             GLE(glGetProgramInfoLog(id, 512, NULL, infoLog));
-            ERR("Failed to link the shader, error message: %s", infoLog);
+            ERR("Failed to link the shader, error message: %s", &infoLog);
         }
     }
 
@@ -78,3 +78,14 @@ Shader::Shader(std::string vertex_path, std::string fragment_path){
 void Shader::Bind(){ GLE(glUseProgram(id)); }
 void Shader::Unbind() { GLE(glUseProgram(0)); }
 void Shader::Delete() { GLE(glDeleteProgram(id)); }
+
+void Shader::uploadVec3(const char* name, glm::vec3 vec){
+
+    Bind();
+
+    gle::clear();
+    int location = glGetUniformLocation(id, name);
+    gle::check();
+
+    glUniform3f(location, vec.x, vec.y, vec.z);
+}

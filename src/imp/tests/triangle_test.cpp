@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 int main(){
@@ -19,19 +20,20 @@ int main(){
 
 
     float vertices[] = {
-           0.5f,  0.5f,
-           0.5f, -0.5f,
-          -0.5f, -0.5f,
-          -0.5f,  0.5f
+          -0.5f, -0.5f,    0.0f, 0.0f, 1.0f, // bottom left
+           0.5f, -0.5f,    0.0f, 1.0f, 0.0f, // bottom right
+           0.5f,  0.5f,    1.0f, 0.0f, 0.0f, // top right
+          -0.5f,  0.5f,    1.0f, 0.0f, 1.0f  // top left
+
     };
 
     unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
+           0, 1, 2,
+           2, 3, 0
     };
 
 
-    Shader shader("res/test.vert", "res/test.frag");
+    Shader shader("res/tests/triangle/test.vert", "res/tests/triangle/test.frag");
 
     shader.Bind();
 
@@ -41,24 +43,31 @@ int main(){
     VertexBuffer vb(vertices, sizeof(vertices), GL_STATIC_DRAW);
     va.setVertexBuffer(&vb);
 
-    unsigned int layout[] = {2};
-    va.setLayout(layout, sizeof(layout) / sizeof(int));
-
     IndexBuffer ib(indices, sizeof(indices));
     va.setIndexBuffer(&ib);
 
     va.Bind();
+    unsigned int layout_data[] = {2, 3};
+    va.setLayout(layout_data, sizeof(layout_data) / sizeof(unsigned int));
 
+    float first_time = glfwGetTime();
+    float last_time, dt = -1.0f;
 
-       while(!window.shouldClose()){
+    while(!window.shouldClose()){
         window.clear();
 
-        GLE(glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0));
+        GLE(glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int),  GL_UNSIGNED_INT, 0));
+
+        last_time = glfwGetTime();
+        dt = last_time - first_time;
+        first_time = last_time;
+
+        INFO("fps %f", 1 / dt);
 
         window.endLoop();
     }
 
-    va.DeleteAll();
+   // va.DeleteAll();
     shader.Delete();
     window.terminate();
 }

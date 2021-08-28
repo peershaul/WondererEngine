@@ -21,4 +21,4 @@
 #include "src/imp/engine/visual/renderer/shader.cpp"
 
 // On src/imp/tests there are couple of "tech demos" for the engine
-#include "src/imp/tests/triangle_test.cpp"
+#include "src/imp/tests/ground.cpp"

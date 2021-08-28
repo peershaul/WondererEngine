@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <glm/glm.hpp>
 
 class Shader{
 
@@ -13,4 +14,6 @@ class Shader{
         void Bind();
         void Unbind();
         void Delete();
+
+        void uploadVec3(const char* name, glm::vec3 vec);
 };
