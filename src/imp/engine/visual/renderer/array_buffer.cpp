@@ -34,7 +34,6 @@ void ArrayBuffer::setLayout(unsigned int* layout_data, unsigned int layout_lengt
                                   (void*) (element_offset * sizeof(float))));
 
         element_offset += layout[i];
-        INFO("position %d is of: %d values", i, layout[i]);
     }
 }
 

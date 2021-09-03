@@ -20,5 +20,11 @@
 // The Shader class that manages anything related to shaders
 #include "src/imp/engine/visual/renderer/shader.cpp"
 
+// The Camera class
+#include "src/imp/engine/visual/camera.cpp"
+
+// A class that controlles all the user input
+#include "src/imp/engine/func/keyboard.cpp"
+
 // On src/imp/tests there are couple of "tech demos" for the engine
-#include "src/imp/tests/ground.cpp"
+#include "src/imp/tests/pyramid.cpp"

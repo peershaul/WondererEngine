@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #include <fstream>
 #include <sstream>
-#include <iostream>
+#include <glm/gtc/type_ptr.hpp>
 
 unsigned int compile_shader(std::string path, GLenum type){
     std::string s_code;
@@ -79,13 +79,29 @@ void Shader::Bind(){ GLE(glUseProgram(id)); }
 void Shader::Unbind() { GLE(glUseProgram(0)); }
 void Shader::Delete() { GLE(glDeleteProgram(id)); }
 
-void Shader::uploadVec3(const char* name, glm::vec3 vec){
-
-    Bind();
-
+int getLocation(unsigned int id, const char* name){
     gle::clear();
     int location = glGetUniformLocation(id, name);
     gle::check();
 
+    return location;
+}
+
+void Shader::uploadVec3(const char* name, glm::vec3 vec){
+
+    Bind();
+    int location = getLocation(id, name);
     glUniform3f(location, vec.x, vec.y, vec.z);
+}
+
+void Shader::uploadMat4(const char* name, glm::mat4 mat){
+    Bind();
+    int location = getLocation(id, name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::uploadVec4(const char* name, glm::vec4 vec){
+    Bind();
+    int location = getLocation(id, name);
+    glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 }

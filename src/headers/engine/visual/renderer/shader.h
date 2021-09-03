@@ -16,4 +16,6 @@ class Shader{
         void Delete();
 
         void uploadVec3(const char* name, glm::vec3 vec);
+        void uploadVec4(const char* name, glm::vec4 vec);
+        void uploadMat4(const char* name, glm::mat4 mat);
 };
