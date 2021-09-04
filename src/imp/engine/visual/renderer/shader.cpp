@@ -105,3 +105,9 @@ void Shader::uploadVec4(const char* name, glm::vec4 vec){
     int location = getLocation(id, name);
     glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 }
+
+void Shader::uploadFloat(const char* name, float value){
+    Bind();
+    int location = getLocation(id, name);
+    glUniform1f(location, value);
+}

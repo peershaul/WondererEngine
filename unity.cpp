@@ -27,4 +27,4 @@
 #include "src/imp/engine/func/keyboard.cpp"
 
 // On src/imp/tests there are couple of "tech demos" for the engine
-#include "src/imp/tests/pyramid.cpp"
+#include "src/imp/tests/ground.cpp"

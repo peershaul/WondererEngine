@@ -30,6 +30,7 @@ glm::mat4 Camera::updateCamMatrix(){
 }
 
 void Camera::uploadCamMatrix(const char* name, Shader* shader){
+    updateCamMatrix();
     shader->uploadMat4(name, camMatrix);
 }
 

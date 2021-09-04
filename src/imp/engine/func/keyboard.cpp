@@ -1,4 +1,5 @@
 #include "../../../headers/engine/func/keyboard.h"
+#include "../../../headers/engine/debug/logger.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
