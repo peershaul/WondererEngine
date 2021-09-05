@@ -11,61 +11,83 @@
 
 #include "../../headers/engine/func/keyboard.h"
 
+#define _USE_MATH_DEFINES
+
 #include <glm/glm.hpp>
 #include <time.h>
 #include <GL/glew.h>
 #include <vector>
+#include <cmath>
 #include <array>
 #include <iostream>
 
+void genColor(std::vector<glm::vec3>* colors){
+    colors->push_back(glm::vec3((float) rand() / RAND_MAX, (float) rand() / RAND_MAX, (float) rand() / RAND_MAX));
+}
+
+float height_function(float position){
+    float angle_scaler = 0.2f;
+    float amplitude = 1.0f;
+    return amplitude * sin(position * angle_scaler * M_PI);
+}
+
 void genTurrain(std::vector<float>* verticies, std::vector<unsigned int>* indices){
     srand((unsigned)time(NULL));
-    glm::vec2 dimentions = glm::vec2(2, 2);
-    int subdivide = 4;
+    glm::vec2 dimentions = glm::vec2(20);
+    int subdivide = 20;
     glm::vec2 squares = dimentions / (float) subdivide;
-    INFO("squares (%f, %f)", squares.x, squares.y);
 
-    std::vector<std::array<glm::vec2, 5>> coords = {};
+    std::vector<std::array<glm::vec3, 3>> coords = {};
     std::vector<glm::vec3> colors = {};
-    for(int y = 0; y < subdivide; y++)
-        for(int x = 0; x < subdivide; x++){
+
+    for(int x = 0; x < subdivide; x++){
+        for(int y = 0; y < subdivide; y++){
+            // Left triangle
             coords.push_back({});
-            coords.back()[0] = glm::vec2(x * squares.x, y * squares.y);
-            coords.back()[1] = glm::vec2((x + 1) * squares.x, y * squares.y);
-            coords.back()[2] = glm::vec2(x * squares.x, (y + 1) * squares.y);
-            coords.back()[3] = glm::vec2((x + 1) * squares.x, (y + 1) * squares.y);
-            coords.back()[4] = glm::vec2((x + 0.5f) * squares.x, (y + 0.5f) * squares.y);
+            coords.back()[0] = glm::vec3(x * squares.x, y * squares.y, height_function(x));
+            coords.back()[1] = glm::vec3(x * squares.x, (y + 1) * squares.y, height_function(x));
+            coords.back()[2] = glm::vec3((x + 0.5) * squares.x, (y + 0.5) * squares.y, height_function(x + 0.5));
+            genColor(&colors);
 
-            colors.push_back(glm::vec3((float) rand() / RAND_MAX, (float) rand() / RAND_MAX, (float) rand() / RAND_MAX));
+            // Top triangle
+            coords.push_back({});
+            coords.back()[0] = glm::vec3(x * squares.x, (y + 1) * squares.y, height_function(x));
+            coords.back()[1] = glm::vec3((x + 1) * squares.x, (y + 1) * squares.y, height_function(x + 1));
+            coords.back()[2] = glm::vec3((x + 0.5) * squares.x, (y + 0.5) * squares.y, height_function(x + 0.5));
+            genColor(&colors);
 
-          std::cout << "tile (" << x << ", " << y << ")\n";
-          for(int i = 0; i < 5; i++)
-              std::cout << "\t(" << coords.back()[i].x << ", " << coords.back()[i].y << ")\n";
-          std::cout << "color: (" << colors.back().x << ", " << colors.back().y << ", " << colors.back().z <<")\n";
+            // Right triangle
+            coords.push_back({});
+            coords.back()[0] = glm::vec3((x + 1) * squares.x, y * squares.y, height_function(x + 1));
+            coords.back()[1] = glm::vec3((x + 0.5) * squares.x, (y + 0.5) * squares.y, height_function(x + 0.5));
+            coords.back()[2] = glm::vec3((x + 1) * squares.x, (y + 1) * squares.y, height_function(x + 1));
+            genColor(&colors);
+
+            // Bottom triangle
+            coords.push_back({});
+            coords.back()[0] = glm::vec3(x * squares.x, y * squares.y, height_function(x));
+            coords.back()[1] = glm::vec3((x + 0.5) * squares.x, (y + 0.5) * squares.y, height_function(x + 0.5));
+            coords.back()[2] = glm::vec3((x + 1) * squares.x, y * squares.y, height_function(x + 1));
+            genColor(&colors);
         }
+    }
 
-    for(int i = 0; i < coords.size(); i++){
-        for(int j = 0; j < 5; j++){
+    unsigned int indicesCount = 0;
+
+    for(unsigned int i = 0; i < coords.size(); i++){
+        for(int j = 0; j < 3; j++){
             verticies->push_back(coords[i][j].x);
             verticies->push_back(coords[i][j].y);
+            verticies->push_back(coords[i][j].z);
             verticies->push_back(colors[i].x);
             verticies->push_back(colors[i].y);
             verticies->push_back(colors[i].z);
+            indices->push_back(indicesCount);
+            indicesCount++;
         }
-
-        indices->push_back(i * 5 + 0);
-        indices->push_back(i * 5 + 2);
-        indices->push_back(i * 5 + 4);
-        indices->push_back(i * 5 + 2);
-        indices->push_back(i * 5 + 3);
-        indices->push_back(i * 5 + 4);
-        indices->push_back(i * 5 + 1);
-        indices->push_back(i * 5 + 4);
-        indices->push_back(i * 5 + 3);
-        indices->push_back(i * 5 + 0);
-        indices->push_back(i * 5 + 4);
-        indices->push_back(i * 5 + 1);
     }
+
+    INFO("Count of indices is: %d", (indicesCount - 1));
 }
 
 
@@ -89,7 +111,8 @@ int main(){
         groundIndices[i] = generatedIndices[i];
 
 
-    Camera cam(&window, glm::vec3(0.0f, 0.0f, 2.0f));
+    Camera cam(&window, glm::vec3(10.0f, 50.0f, 25.0f),
+               glm::vec3(0.0f, -1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     Keyboard keys;
 
     Shader groundShader("res/tests/ground/ground.vert", "res/tests/ground/ground.frag");
@@ -102,13 +125,19 @@ int main(){
     IndexBuffer groundIB(groundIndices, sizeof(groundIndices));
     groundVA.setIndexBuffer(&groundIB);
 
-    unsigned int groundLayout[] = {2, 3};
+    unsigned int groundLayout[] = {3, 3};
     groundVA.setLayout(groundLayout, sizeof(groundLayout) / sizeof(int));
 
     cam.genCamMatrix(45.0f, 0.1f, 100.0f);
     cam.uploadCamMatrix("camMatrix", &groundShader);
 
     groundShader.uploadFloat("aspectRatio", ((float) window.getWidth() / window.getHeight()));
+
+    float firstTime = Window::getTime();
+    float dt = -1.0f, lastTime;
+
+    glm::vec3 lightPos = glm::vec3(30.0f, 40.0f, -10.0f);
+    // groundShader.uploadVec3("lightPos", lightPos);
 
     while(!window.shouldClose()){
         window.clear();
@@ -118,7 +147,20 @@ int main(){
 
        GLE(glDrawElements(GL_TRIANGLES, sizeof(groundIndices) / sizeof(int), GL_UNSIGNED_INT, 0));
 
-        window.endLoop();
+       window.endLoop();
+
+       glm::vec3 position = cam.Position;
+       glm::vec3 Orientation = cam.Orientation;
+       glm::vec3 up = cam.Up;
+
+       INFO("Position (%f, %f, %f)", position.x, position.y, position.z);
+       INFO("Orientation (%f, %f, %f)", Orientation.x, Orientation.y, Orientation.z);
+       INFO("Up (%f, %f, %f)", up.x, up.y, up.z);
+
+       lastTime = Window::getTime();
+       dt = lastTime - firstTime;
+       firstTime = lastTime;
+
     }
 
     groundShader.Delete();

@@ -40,4 +40,10 @@ void Keyboard::use(Window* win, Camera* cam){
 
     if(glfwGetKey(w, GLFW_KEY_RIGHT) == GLFW_PRESS)
         cam->Orientation = glm::rotate(cam->Orientation, glm::radians(-rotationSpeed), cam->Up);
+
+    if(glfwGetKey(w, GLFW_KEY_SPACE) == GLFW_PRESS)
+        this->camSpeed = camHighSpeed;
+
+    else if(glfwGetKey(w, GLFW_KEY_SPACE) == GLFW_RELEASE)
+        this->camSpeed = this->camLowSpeed;
 }

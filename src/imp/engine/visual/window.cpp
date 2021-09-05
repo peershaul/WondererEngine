@@ -86,3 +86,7 @@ void Window::SetClearColor(glm::vec3 color){
 
 // Returns the GLFW window pointer
 GLFWwindow* Window::getWindowID(){ return window; }
+
+float Window::getTime(){
+    return (float) glfwGetTime();
+}

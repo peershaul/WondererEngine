@@ -8,6 +8,8 @@ class Keyboard{
         bool firstClick = true;
     public:
         float camSpeed = 0.1f;
+        float camLowSpeed = 0.1f;
+        float camHighSpeed = 0.4f;
         float rotationSpeed = 1.0f;
         void use(Window* win, Camera* cam);
 };

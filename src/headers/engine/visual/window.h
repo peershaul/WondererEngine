@@ -40,4 +40,6 @@ class Window{
 
         // Sets the clear color
         void SetClearColor(glm::vec3 color);
+
+        static float getTime();
 };

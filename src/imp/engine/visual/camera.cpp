@@ -7,7 +7,12 @@ Camera::Camera(Window* win, glm::vec3 position){
     window = win;
     Position = position;
 }
-
+Camera::Camera(Window* win, glm::vec3 position, glm::vec3 orientation, glm::vec3 up){
+    window = win;
+    Position = position;
+    Orientation = orientation;
+    Up = up;
+}
 glm::mat4 Camera::genCamMatrix(float FOVdeg, float nearPlane, float farPlane){
 
     FOV = glm::radians(FOVdeg);
