@@ -31,6 +31,7 @@ VertexBuffer::VertexBuffer(float* vertex_data, unsigned int size, GLenum usage){
     init();
 
     change_data(0, size, vertex_data);
+    Unbind();
 }
 
 void VertexBuffer::change_data(unsigned int offset, unsigned int size, float* data){

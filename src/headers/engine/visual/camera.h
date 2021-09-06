@@ -23,7 +23,7 @@ class Camera{
         glm::vec3 Position;
 
         Camera(Window* win, glm::vec3 position);
-        Camera(Window* win, glm::vec3 position, glm::vec3 )
+        Camera(Window* win, glm::vec3 position, glm::vec3 orientation, glm::vec3 up);
 
         glm::mat4 genCamMatrix(float FOVdeg, float nearPlane, float farPlane);
         glm::mat4 updateCamMatrix();
