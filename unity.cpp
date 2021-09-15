@@ -26,5 +26,8 @@
 // A class that controlles all the user input
 #include "src/imp/engine/func/keyboard.cpp"
 
+// The mesh class
+#include "src/imp/engine/visual/renderer/mesh.cpp"
+
 // On src/imp/tests there are couple of "tech demos" for the engine
-#include "src/imp/tests/wave.cpp"
+#include "src/imp/tests/mesh_test.cpp"

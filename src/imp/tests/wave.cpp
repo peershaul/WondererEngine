@@ -146,8 +146,8 @@ int main(){
     float firstTime = Window::getTime();
     float dt = -1.0f, lastTime;
 
-    glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 30.0f);
-    groundShader.uploadVec3("lightPos", lightPos);
+    //glm::vec3 lightPos = glm::vec3(20.0f, 20.0f, 30.0f);
+    //groundShader.uploadVec3("lightPos", lightPos);
 
     glm::vec3 groundColor = glm::vec3(0.0f, 0.6313f, 0.4392f);
     groundShader.uploadVec3("color", groundColor);
@@ -179,6 +179,7 @@ int main(){
        groundVA.Bind();
 
        groundShader.uploadVec3("camPos", cam.Position);
+       groundShader.uploadVec3("lightPos", cam.Position);
 
        cam.uploadCamMatrix("camMatrix", &groundShader);
 
