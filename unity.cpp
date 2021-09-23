@@ -30,4 +30,4 @@
 #include "src/imp/engine/visual/renderer/mesh.cpp"
 
 // On src/imp/tests there are couple of "tech demos" for the engine
-#include "src/imp/tests/conways_gameOfLife.cpp"
+#include "src/imp/tests/game_map.cpp"
