@@ -29,5 +29,9 @@
 // The mesh class
 #include "src/imp/engine/visual/renderer/mesh.cpp"
 
+// A Class that meant to help with using the imgui library
+#include "src/imp/engine/debug/imgui_helper.cpp"
+#include "src/imp/engine/debug/imgui_utils.cpp"
+
 // On src/imp/tests there are couple of "tech demos" for the engine
-#include "src/imp/tests/game_map.cpp"
+#include "src/imp/tests/turrain_test.cpp"

@@ -6,6 +6,9 @@
 #include "../../headers/engine/func/keyboard.h"
 
 #include "../../vendor/PerlinNoise/PerlinNoise.hpp"
+#include "../../vendor/imgui-cmake/include/imgui.h"
+#include "../../vendor/imgui-cmake/include/imgui_impl_glfw.h"
+#include "../../vendor/imgui-cmake/include/imgui_impl_opengl3.h"
 
 #include <vector>
 #include <array>
@@ -45,7 +48,9 @@ class Map{
         unsigned int octaves;
 
     public:
-        Map(unsigned int game_size, unsigned int subdivide, unsigned int octaves, glm::vec2 map_position){
+        float frequency;
+
+        Map(unsigned int game_size, unsigned int subdivide, unsigned int octaves, glm::vec2 map_position, float frequency = 64.0f){
             srand(time(NULL));
             float tile_size = game_size / (float) subdivide;
             INFO("Tile size %f", tile_size);
@@ -71,11 +76,10 @@ class Map{
         void genNoise(){
             mapNoise = {};
             const siv::PerlinNoise perlin(seed);
-            float freq = 128;
 
             for(unsigned int x = 0; x < subdivide; x++)
                 for(unsigned int y = 0; y < subdivide; y++)
-                    mapNoise.push_back(perlin.accumulatedOctaveNoise2D_0_1(x / freq, y / freq, octaves));
+                    mapNoise.push_back(perlin.accumulatedOctaveNoise2D_0_1(x / frequency, y / frequency, octaves));
         }
 
         void genSeed(){
@@ -155,6 +159,13 @@ int main(){
         return -1;
     }
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window.getWindowID(), true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+
     Map map(20, 400, 16, glm::vec2(-10, -10));
 
     std::vector<unsigned int> layout = {2, 1};
@@ -173,11 +184,21 @@ int main(){
     Camera cam(&window, glm::vec3(0, 0, 30));
     cam.genCamMatrix(45.0f, 0.1f, 1000.0f);
 
+    bool mode = true;
+    bool changed = false;
+
     while(!window.shouldClose()){
         window.clear();
 
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        if(!io.WantCaptureMouse){
+           // Input files
+        }
+
         bool refreshed = false;
-        bool mode = false;
 
         getKeys(&window, &cam, &refreshed, &mode);
         cam.uploadCamMatrix("camMatrix", &shader);
@@ -189,12 +210,36 @@ int main(){
             map.genSeed();
             vertices = map.getVertexData();
             mesh.changeVertices(0, vertices.size(), vertices);
+            changed = false;
+        }
+
+        else if(changed){
+            map.genNoise();
+            vertices = map.getVertexData();
+            mesh.changeVertices(0, vertices.size(), vertices);
+            changed = false;
         }
 
         shader.uploadFloat("mode", mode);
 
         mesh.draw();
 
+        float prev_freq = map.frequency;
+
+        ImGui::Begin("I'm the Wonderer engine");
+        ImGui::Text("Hey I'm a test text");
+        ImGui::Checkbox("Draw Mode: ", &mode);
+        ImGui::SliderFloat("Frequency: ", &map.frequency, 2.0f, 128.0f);
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        if(prev_freq != map.frequency) changed = true;
         window.endLoop();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
