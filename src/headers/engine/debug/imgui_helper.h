@@ -21,26 +21,28 @@ class ImguiElement{
 
 
 class ImguiWindow{
-    private:
+    protected:
         std::vector<ImguiElement*> elements;
         std::string title;
 
     public:
         ImguiWindow(const std::string& title);
 
-        void shout();
+        virtual void shout();
         std::string getTitle();
 
         ImguiElement* getElement(const std::string& id);
         ImguiElement* addElement(ImguiElement* elem);
         void removeElement(const std::string& id);
 };
+
 class Imgui{
     private:
         ImGuiIO io;
         std::vector<ImguiWindow*> windows;
 
     public:
+
         Imgui(const std::string& glsl_version, Window* window);
 
         void newFrame();
@@ -52,5 +54,6 @@ class Imgui{
         void shutdown();
 
         ImguiWindow* addWindow(const std::string& title);
+        ImguiWindow* addWindow(ImguiWindow* window);
         void removeWindow(const std::string& title);
 };

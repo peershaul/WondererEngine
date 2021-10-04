@@ -29,6 +29,11 @@ ImguiWindow* Imgui::addWindow(const std::string& title){
     return windows.back();
 }
 
+ImguiWindow* Imgui::addWindow(ImguiWindow* window){
+    windows.push_back(window);
+    return window;
+}
+
 void Imgui::removeWindow(const std::string& title){
     for(unsigned int i = 0; i < windows.size(); i++)
         if(windows[i]->getTitle() == title){
@@ -123,6 +128,8 @@ void ImguiElement::shout(){
 }
 
 std::string ImguiElement::getID(){ return id; }
+
+
 
 
 

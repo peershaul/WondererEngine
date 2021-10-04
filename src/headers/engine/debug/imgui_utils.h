@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../vendor/imgui-cmake/include/imgui.h"
+#include "../visual/camera.h"
 #include "imgui_helper.h"
 
 #include <string>
@@ -15,6 +16,8 @@ class ImguiTextField : public ImguiElement{
 };
 
 
+
+
 class ImguiCheckBox : public ImguiElement{
     private:
         bool* state;
@@ -23,6 +26,9 @@ class ImguiCheckBox : public ImguiElement{
         ImguiCheckBox(const std::string& im_string, bool* state);
         void shout();
 };
+
+
+
 
 class ImguiSliderFloat : public ImguiElement{
     private:
@@ -35,6 +41,9 @@ class ImguiSliderFloat : public ImguiElement{
         void shout();
 };
 
+
+
+
 class ImguiSliderInt : public ImguiElement{
     private:
         int* state;
@@ -44,5 +53,29 @@ class ImguiSliderInt : public ImguiElement{
 
     public:
         ImguiSliderInt(const std::string& im_string, int* state, int low_value, int high_value);
+        void shout();
+};
+
+
+
+class ImguiButton : public ImguiElement{
+    private:
+        bool* callback;
+        std::string text;
+    public:
+        ImguiButton(const std::string& im_string, bool* callback);
+        void shout();
+};
+
+// Custom Window
+class CameraInfoWindow : public ImguiWindow{
+    private:
+        ImguiTextField* position_field = nullptr;
+        ImguiTextField* orientation_field = nullptr;
+        ImguiTextField* up_field = nullptr;
+    public:
+        Camera* camera;
+        CameraInfoWindow(const std::string& title, Camera* camera);
+
         void shout();
 };

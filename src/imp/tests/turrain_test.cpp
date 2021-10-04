@@ -160,7 +160,7 @@ int main(){
 
     Keyboard keys;
 
-    Turrain turrain(200, 128, rand(), 16, 20, 64);
+    Turrain turrain(200, 140, rand(), 8, 20, 64);
     bool draw_mode = false;
     bool is_refreshed = false;
 
@@ -168,6 +168,7 @@ int main(){
     main_gui->addElement(new ImguiSliderFloat("Frequency", &turrain.frequency, 2, 256));
     main_gui->addElement(new ImguiSliderFloat("Max height", &turrain.max_height, 2, 50));
     main_gui->addElement(new ImguiCheckBox("Draw mode", &draw_mode));
+    main_gui->addElement(new ImguiButton("Refresh seed", &is_refreshed));
 
     std::vector<unsigned int> layout = {3, 3};
     std::vector<unsigned int> indices = turrain.getIndexData();
@@ -210,7 +211,9 @@ int main(){
         gui.render();
         window.endLoop();
 
-        if(turrain.octaves != octaves_checker || max_height_checker != turrain.max_height || frequency_checker != turrain.frequency){
+        if(is_refreshed) turrain.changeSeed(rand());
+
+        if(turrain.octaves != octaves_checker || max_height_checker != turrain.max_height || frequency_checker != turrain.frequency || is_refreshed){
             vertices = turrain.getVertexData();
             mesh.changeVertices(0, vertices.size(), vertices);
         }

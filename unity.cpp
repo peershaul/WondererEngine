@@ -34,4 +34,4 @@
 #include "src/imp/engine/debug/imgui_utils.cpp"
 
 // On src/imp/tests there are couple of "tech demos" for the engine
-#include "src/imp/tests/turrain_test.cpp"
+#include "src/imp/tests/turrain_generator/main.cpp"

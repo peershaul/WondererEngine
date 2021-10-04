@@ -47,6 +47,7 @@ void ImguiSliderFloat::shout(){
 
 
 
+
 ImguiSliderInt::ImguiSliderInt(const std::string& im_string, int* state, int low_value,
                                int high_value) : ImguiElement(im_string){
     ImguiSliderInt::state = state;
@@ -58,4 +59,46 @@ ImguiSliderInt::ImguiSliderInt(const std::string& im_string, int* state, int low
 
 void ImguiSliderInt::shout(){
     ImGui::SliderInt(text.c_str(), state, low_value, high_value);
+}
+
+
+ImguiButton::ImguiButton(const std::string& im_string, bool* callback) :
+    ImguiElement(im_string){
+    ImguiButton::callback = callback;
+    ImguiButton::text = im_string;
+}
+
+void ImguiButton::shout(){
+    if(ImGui::Button(text.c_str())) *callback = true;
+    else *callback = false;
+}
+
+
+
+
+
+
+
+CameraInfoWindow::CameraInfoWindow(const std::string& title, Camera* camera) :
+    ImguiWindow(""){
+    CameraInfoWindow::title = "Camera info window (" + title + ")";
+
+    position_field = (ImguiTextField*) addElement(new ImguiTextField("Position: none"));
+    orientation_field = (ImguiTextField*) addElement(new ImguiTextField("Orientaion: none"));
+    up_field = (ImguiTextField*) addElement(new ImguiTextField("Up: none"));
+}
+
+void CameraInfoWindow::shout(){
+    position_field->changeText("Position: (" + std::to_string(camera->Position.x) + ", " +
+    std::to_string(camera->Position.y) + ", " + std::to_string(camera->Position.z) + ")");
+
+    orientation_field->changeText("Orentation: (" + std::to_string(camera->Orientation.x) + ", " +
+    std::to_string(camera->Orientation.y) + ", " + std::to_string(camera->Orientation.z) + ")");
+
+    up_field->changeText("Up: (" + std::to_string(camera->Up.x) + ", " +
+    std::to_string(camera->Up.y) + ", " + std::to_string(camera->Up.z));
+
+    ImGui::Begin(title.c_str());
+    for(ImguiElement* elem : elements) elem->shout();
+    ImGui::End();
 }
