@@ -10,20 +10,16 @@ Chunck::Chunck(unsigned int plane_size, int load_res, glm::vec2 chunck_offset, N
     Chunck::load_res = load_res;
     Chunck::chunck_offset = chunck_offset;
     Chunck::noise = noise;
+    Chunck::plane_size = plane_size;
 
     int skip_amount = pow(2, load_res);
     vertex_row = (chunck_row_max / skip_amount);
 
     Chunck::world_gap_size = plane_size / (float) (vertex_row);
 
-    grid.reserve(vertex_row * vertex_row);
-    for(int y = 0; y <= vertex_row; y++)
-        for(int x = 0; x <= vertex_row; x++)
-            grid.push_back(
-                glm::vec2(x, y) * world_gap_size + chunck_offset * (float) plane_size
-            );
-
     indices.reserve(grid.size() * 6);
+
+    updatePositions();
 
     int accu = 0;
 
@@ -63,7 +59,15 @@ std::vector<float> Chunck::updateVertexData(){
     return vertices;
 }
 
-
+void Chunck::updatePositions(){
+    grid.clear();
+    grid.reserve(vertex_row * vertex_row);
+    for(int y = 0; y <= vertex_row; y++)
+        for(int x = 0; x <= vertex_row; x++)
+            grid.push_back(
+                glm::vec2(x, y) * world_gap_size + chunck_offset * (float) plane_size
+            );
+}
 
 std::vector<unsigned int> Chunck::getIndexData(){ return indices; }
 std::vector<float> Chunck::getVertexData(){ return vertices; }

@@ -19,7 +19,7 @@ unsigned int compile_shader(std::string path, GLenum type){
         file.close();
         s_code = stream.str();
     } catch(std::ifstream::failure e){
-        ERR("Failed to read \"%s\"", path);
+        ERR("Failed to read \"%s\"", path.c_str());
         return 0;
     }
 
@@ -110,4 +110,26 @@ void Shader::uploadFloat(const char* name, float value){
     Bind();
     int location = getLocation(id, name);
     glUniform1f(location, value);
+}
+
+void Shader::uploadInt(const char* name, int value){
+    Bind();
+    int location = getLocation(id, name);
+    glUniform1i(location, value);
+}
+
+void Shader::uploadVec4Arr(const char* name, std::vector<glm::vec4> vecs){
+    Bind();
+    int location = getLocation(id, name);
+    const unsigned int count = vecs.size() * 4;
+    float gpu_data[count];
+
+    for(unsigned int i = 0; i < vecs.size(); i++){
+        gpu_data[i * 4 + 0] = vecs[i].x;
+        gpu_data[i * 4 + 1] = vecs[i].y;
+        gpu_data[i * 4 + 2] = vecs[i].z;
+        gpu_data[i * 4 + 3] = vecs[i].w;
+    }
+
+    glUniform4fv(location, count, gpu_data);
 }
