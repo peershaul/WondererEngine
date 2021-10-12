@@ -8,4 +8,9 @@
 #include "engine/src/debug/logger.cpp"
 #include "engine/src/debug/error.cpp"
 
+#include "engine/src/visual/window.cpp"
+
+#include "engine/src/events/events.cpp"
+#include "engine/src/events/window_events.cpp"
+
 #include "game/tests/triangle_test/main.cpp"
