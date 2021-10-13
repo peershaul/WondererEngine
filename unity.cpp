@@ -13,4 +13,7 @@
 #include "engine/src/events/events.cpp"
 #include "engine/src/events/window_events.cpp"
 
+#include "engine/src/debug/imgui_helper.cpp"
+#include "engine/src/debug/imgui_utils.cpp"
+
 #include "game/tests/triangle_test/main.cpp"

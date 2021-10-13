@@ -2,6 +2,8 @@
 #include "../../../engine/include/visual/window.h"
 #include "../../../engine/include/events/events.h"
 #include "../../../engine/include/events/window_events.h"
+#include "../../../engine/include/debug/imgui_helper.h"
+#include "../../../engine/include/debug/imgui_utils.h"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -26,9 +28,16 @@ int main(){
         INFO("The background color is: %s", args[0] == 0? "Black" : "Red");
     });
 
+    Imgui::init("#version 430 core");
+    ImguiWindow test_win("Hello world");
+    Imgui::addWindow(&test_win);
+
+    test_win.addElement(new ImguiTextField("Helloo from the developers of the wonderer\n engine"));
+
 
     while(!Window::shouldClose()){
         Window::clear();
+        Imgui::newFrame();
 
         if(dt > 0)
             accumilator += dt;
@@ -42,10 +51,13 @@ int main(){
         EventManager::eventsCheck();
         EventManager::callEvents();
 
+        Imgui::render();
+
         lastTime = Window::getTime();
         dt = lastTime - startTime;
         startTime = lastTime;
     }
 
     EventManager::destroy();
+    Imgui::destroy();
 }
