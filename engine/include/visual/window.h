@@ -9,9 +9,11 @@ namespace wonderer{
     class Window{
         public:
             static bool create(int width, int height, const std::string& name, glm::vec3 bg_color);
+            static void destroy();
 
             static bool shouldClose();
             static GLFWwindow* getWindowPointer();
+
             static void changeClearColor(glm::vec3 new_color);
             static inline glm::vec3 getClearColor(){ return instance.bg_color; }
 
@@ -22,8 +24,7 @@ namespace wonderer{
             Window(Window&) = delete;
 
         private:
-            Window();
-            ~Window();
+            Window(){};
 
             static Window instance;
             GLFWwindow* window;

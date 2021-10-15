@@ -2,12 +2,9 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace wonderer{
-
-    enum class EventType{
-        EMPTY = 0, MouseClick, ClearColorEvent
-    };
 
     class Event {
 
@@ -21,14 +18,14 @@ namespace wonderer{
             bool removeListener(void(*listener)(std::vector<float>));
             bool listenerExist(void(*listener)(std::vector<float>));
 
-            inline EventType getEventType(){ return event_type; }
+            inline std::string getEventName(){ return event_name; }
             inline int getNumberOfArgs(){ return arg_length; }
 
         protected:
-            Event(EventType e, int arg_length);
+            Event(const std::string& name, int arg_length);
 
             bool triggered = false;
-            EventType event_type;
+            std::string event_name;
             int arg_length;
 
             std::vector<float> args;
@@ -41,11 +38,11 @@ namespace wonderer{
             static bool addEvent(Event* event);
             static void eventsCheck();
 
-            static bool subscribeToEvent(EventType type, void (*listener)(std::vector<float>));
-            static bool removeSubscription(EventType type, void (*listener)(std::vector<float>));
-            static bool listenerExist(EventType type, void(*listener)(std::vector<float>));
+            static bool subscribeToEvent(const std::string& name, void (*listener)(std::vector<float>));
+            static bool removeSubscription(const std::string& name, void (*listener)(std::vector<float>));
+            static bool listenerExist(const std::string& name, void(*listener)(std::vector<float>));
 
-            static Event* getEvent(EventType type);
+            static Event* getEvent(const std::string& name);
 
             static void destroy();
         private:

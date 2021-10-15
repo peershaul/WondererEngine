@@ -1,18 +1,11 @@
 #include "../../include/visual/window.h"
 
 #include "../../include/debug/logger.h"
+#include "../../include/events/window_events.h"
 
 using namespace wonderer;
 
 Window Window::instance;
-
-Window::Window(){
-
-}
-
-Window::~Window(){
-    glfwTerminate();
-}
 
 bool Window::create(int width, int height, const std::string& name, glm::vec3 bg_color){
     instance.width = width;
@@ -50,6 +43,13 @@ bool Window::create(int width, int height, const std::string& name, glm::vec3 bg
 
     glClearColor(bg_color.x, bg_color.y, bg_color.z, 1);
 
+    EventManager::addEvent(new MouseMoveEvent());
+    EventManager::addEvent(new WindowResizeEvent());
+
+    EventManager::subscribeToEvent("window resize", [](std::vector<float> args){
+        glViewport(0, 0, args[0], args[1]);
+    });
+
     return true;
 }
 
@@ -69,3 +69,5 @@ void Window::changeClearColor(glm::vec3 new_color){
     instance.bg_color = new_color;
     glClearColor(new_color.x, new_color.y, new_color.z, 1.0f);
 }
+
+void Window::destroy() { glfwTerminate(); }

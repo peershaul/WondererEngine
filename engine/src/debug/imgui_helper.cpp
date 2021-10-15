@@ -1,4 +1,5 @@
 #include "../../include/debug/imgui_helper.h"
+#include "../../include/debug/imgui_utils.h"
 
 #include "../../../vendor/imgui/imgui_impl_opengl3.h"
 #include "../../../vendor/imgui/imgui_impl_glfw.h"
@@ -107,7 +108,6 @@ ImguiElement* ImguiWindow::getElement(const std::string& id){
     for(ImguiElement* elem : elements)
         if(elem->getID() == id)
             return elem;
-
 
     return nullptr;
 }

@@ -26,15 +26,15 @@ void EventManager::eventsCheck(){
 }
 
 
-Event* EventManager::getEvent(EventType type){
+Event* EventManager::getEvent(const std::string& name){
     for(Event* e : events)
-        if(e->getEventType() == type)
+        if(e->getEventName() == name)
             return e;
     return nullptr;
 }
 
-bool EventManager::subscribeToEvent(EventType type, void(*listener)(std::vector<float>)){
-    Event* e = getEvent(type);
+bool EventManager::subscribeToEvent(const std::string& name, void(*listener)(std::vector<float>)){
+    Event* e = getEvent(name);
     if(e == nullptr) {
         ERR("Event type isnt found");
         return false;
@@ -42,8 +42,8 @@ bool EventManager::subscribeToEvent(EventType type, void(*listener)(std::vector<
     return e->addListener(listener);
 }
 
-bool EventManager::removeSubscription(EventType type, void(*listener)(std::vector<float>)){
-    Event* e = getEvent(type);
+bool EventManager::removeSubscription(const std::string& name, void(*listener)(std::vector<float>)){
+    Event* e = getEvent(name);
     if(e == nullptr){
         ERR("Event type isnt found");
         return false;
@@ -51,8 +51,8 @@ bool EventManager::removeSubscription(EventType type, void(*listener)(std::vecto
     return e->removeListener(listener);
 }
 
-bool EventManager::listenerExist(EventType type, void(*listener)(std::vector<float>)){
-    Event* e = getEvent(type);
+bool EventManager::listenerExist(const std::string& name, void(*listener)(std::vector<float>)){
+    Event* e = getEvent(name);
     if(e == nullptr){
         WARN("Event type doesnt exist");
         return false;
@@ -72,14 +72,13 @@ void EventManager::destroy(){
 
 
 
-Event::Event(EventType e, int arg_length){
-    Event::event_type = e;
+Event::Event(const std::string& name, int arg_length){
+    Event::event_name = name;
     Event::arg_length = arg_length;
     Event::triggered = false;
 
     listeners = {};
 
-    EventManager::addEvent(this);
 }
 
 
