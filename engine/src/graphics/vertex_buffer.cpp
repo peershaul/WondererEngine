@@ -1,5 +1,6 @@
 #include "../../include/graphics/vertex_buffer.h"
 #include "../../include/debug/error.h"
+#include "../../include/debug/logger.h"
 
 using namespace wonderer;
 
@@ -18,6 +19,14 @@ void VertexBuffer::_init(unsigned int buffer_size, GLenum drawMode){
 void VertexBuffer::changeData(unsigned int start_offset, unsigned int size, float* data){
     bind();
     GLE(glBufferSubData(GL_ARRAY_BUFFER, start_offset, size, data));
+
+    int b_size = 0;
+    GLE(glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &b_size));
+    if(buffer_size != b_size){
+        GLE(glDeleteBuffers(1, &id));
+        ERR("OpenGL failed to create the VertexBuffer");
+    }
+
     unbind();
 }
 
@@ -38,6 +47,13 @@ VertexBuffer::~VertexBuffer(){
 void VertexBuffer::resizeBuffer(unsigned int new_size){
     GLE(glDeleteBuffers(1, &id));
     _init(new_size, drawMode);
+
+    int b_size = 0;
+    GLE(glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &b_size));
+    if(buffer_size != b_size){
+        GLE(glDeleteBuffers(1, &id));
+        ERR("OpenGL failed to create the VertexBuffer");
+    }
 }
 
 void VertexBuffer::bind(){

@@ -13,6 +13,8 @@
 #include "../../../engine/include/graphics/index_buffer.h"
 #include "../../../engine/include/graphics/array_buffer.h"
 
+#include "../../../engine/include/graphics/shaders.h"
+
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <memory>
@@ -72,23 +74,27 @@ int main(){
     test_win.addElement(new ImguiButton("Event is connected to me", &event_parameter));
 
     std::vector<float> vertices = {
-         -0.5f, -0.5f,
-          0.5f, -0.5f,
-          0.0f,  0.5f
+         -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
+          0.5f, -0.5f,   0.0f, 1.0f, 0.0f,
+          0.0f,  0.5f,   0.0f, 0.0f, 1.0f
     };
 
     std::vector<unsigned int> indices = {0, 1, 2};
 
-    std::vector<unsigned int> layout = {2};
+    std::vector<unsigned int> layout = {2, 3};
 
     ArrayBuffer ab(
-        new IndexBuffer(indices.size(), indices.data(), GL_STATIC_DRAW),
-        new VertexBuffer(vertices.size(), vertices.data(), GL_STATIC_DRAW),
-        layout);
+        new IndexBuffer(indices.size() * sizeof(float), indices.data(), GL_STATIC_DRAW),
+        new VertexBuffer(vertices.size() * sizeof(int), vertices.data(), GL_STATIC_DRAW),
+        layout.data(), layout.size());
+
+    Shader shader("game/tests/triangle_test/default.vert", "game/tests/triangle_test/default.frag");
+
 
     float startTime = Window::getTime();
     float dt = -1.0f, lastTime;
 
+    shader.bind();
     while(!Window::shouldClose()){
         Window::clear();
         Imgui::newFrame();
@@ -98,9 +104,10 @@ int main(){
 
         if(accumilator >= 2.5f){
             color_bit = !color_bit;
-            Window::changeClearColor(glm::vec3(color_bit, 0, 0));
+            Window::changeClearColor(glm::vec3(color_bit));
             accumilator = 0;
         }
+
 
 
         ab.bind();

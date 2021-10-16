@@ -20,4 +20,6 @@
 #include "engine/src/graphics/vertex_buffer.cpp"
 #include "engine/src/graphics/array_buffer.cpp"
 
+#include "engine/src/graphics/shaders.cpp"
+
 #include "game/tests/triangle_test/main.cpp"
