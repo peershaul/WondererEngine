@@ -141,8 +141,3 @@ int Shader::findUniform(const std::string& name){
     }
     return uniforms[name];
 }
-
-void Shader::uploadUniform(const std::string& name, glm::vec3 vec){
-    int location = findUniform(name);
-    GLE(glUniform3f(location, vec.x, vec.y, vec.z));
-}

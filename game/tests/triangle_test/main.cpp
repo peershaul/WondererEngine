@@ -14,9 +14,14 @@
 #include "../../../engine/include/graphics/array_buffer.h"
 
 #include "../../../engine/include/graphics/shaders.h"
+#include "../../../engine/include/graphics/material.h"
+
+#include "../../../engine/include/utils/asset_pool.h"
 
 #include <glm/glm.hpp>
+#include <chrono>
 #include <GL/glew.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 #include <iostream>
 
@@ -55,7 +60,7 @@ int main(){
     EventManager::addEvent(new ButtonEvent(&event_parameter));
 
     EventManager::subscribeToEvent("clear color", [](std::vector<float> args){
-        INFO("The background color is: %s", args[0] == 0? "Black" : "Red");
+        INFO("The background color is: %s", args[0] == 0? "Black" : "White");
     });
 
     EventManager::subscribeToEvent("button event", [](std::vector<float>){
@@ -88,13 +93,21 @@ int main(){
         new VertexBuffer(vertices.size() * sizeof(int), vertices.data(), GL_STATIC_DRAW),
         layout.data(), layout.size());
 
-    Shader shader("game/tests/triangle_test/default.vert", "game/tests/triangle_test/default.frag");
-
-
     float startTime = Window::getTime();
     float dt = -1.0f, lastTime;
 
-    shader.bind();
+    Shader* shader = AssetPool::getShader("game/tests/triangle_test/default.vert",
+                                          "game/tests/triangle_test/default.frag");
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(-0.5, 0, 0));
+
+    Material mat(shader);
+    mat.addVec("color", glm::vec3(1, 0, 0));
+    mat.addMatrix("model", model);
+
+
+    shader->bind();
     while(!Window::shouldClose()){
         Window::clear();
         Imgui::newFrame();
@@ -110,9 +123,11 @@ int main(){
 
 
 
+        mat.bind();
         ab.bind();
         GLE(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL));
         ab.unbind();
+        mat.unbind();
 
         EventManager::eventsCheck();
 
@@ -125,7 +140,8 @@ int main(){
         startTime = lastTime;
     }
 
+    /*AssetPool::clear();
     EventManager::destroy();
     Imgui::destroy();
-    Window::destroy();
+    Window::destroy();*/
 }

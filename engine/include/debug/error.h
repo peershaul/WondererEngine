@@ -1,8 +1,11 @@
 #pragma once
 
-#define GLE(func) gle::clear();                 \
+/*#define GLE(func) gle::clear();                 \
     func;                                       \
     gle::check()
+*/
+
+#define GLE(func) func
 
 namespace gle{
     void clear();
