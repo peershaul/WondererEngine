@@ -1,5 +1,4 @@
 #include "../../../engine/include/debug/logger.h"
-#include "../../../engine/include/debug/error.h"
 
 #include "../../../engine/include/visual/window.h"
 
@@ -9,21 +8,15 @@
 #include "../../../engine/include/debug/imgui_helper.h"
 #include "../../../engine/include/debug/imgui_utils.h"
 
-#include "../../../engine/include/graphics/vertex_buffer.h"
-#include "../../../engine/include/graphics/index_buffer.h"
-#include "../../../engine/include/graphics/array_buffer.h"
-
 #include "../../../engine/include/graphics/shaders.h"
 #include "../../../engine/include/graphics/material.h"
+#include "../../../engine/include/graphics/mesh.h"
 
 #include "../../../engine/include/utils/asset_pool.h"
 
 #include <glm/glm.hpp>
-#include <chrono>
-#include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <memory>
-#include <iostream>
+#include <vector>
 
 
 using namespace wonderer;
@@ -76,6 +69,7 @@ int main(){
     Imgui::addWindow(&test_win);
 
     test_win.addElement(new ImguiTextField("Helloo from the developers of the wonderer\n engine"));
+    ImguiTextField* fps_counter = (ImguiTextField*) test_win.addElement(new ImguiTextField("FPS: None"));
     test_win.addElement(new ImguiButton("Event is connected to me", &event_parameter));
 
     std::vector<float> vertices = {
@@ -88,11 +82,6 @@ int main(){
 
     std::vector<unsigned int> layout = {2, 3};
 
-    ArrayBuffer ab(
-        new IndexBuffer(indices.size() * sizeof(float), indices.data(), GL_STATIC_DRAW),
-        new VertexBuffer(vertices.size() * sizeof(int), vertices.data(), GL_STATIC_DRAW),
-        layout.data(), layout.size());
-
     float startTime = Window::getTime();
     float dt = -1.0f, lastTime;
 
@@ -103,31 +92,40 @@ int main(){
     model = glm::translate(model, glm::vec3(-0.5, 0, 0));
 
     Material mat(shader);
-    mat.addVec("color", glm::vec3(1, 0, 0));
     mat.addMatrix("model", model);
 
+    Mesh mesh(&mat, indices, vertices, layout, DrawMode::DYNAMIC_DRAW);
 
-    shader->bind();
     while(!Window::shouldClose()){
         Window::clear();
         Imgui::newFrame();
 
-        if(dt > 0)
+        if(dt > 0){
             accumilator += dt;
+            fps_counter->changeText("FPS: " + std::to_string(1 / dt));
+        }
 
         if(accumilator >= 2.5f){
             color_bit = !color_bit;
             Window::changeClearColor(glm::vec3(color_bit));
             accumilator = 0;
+
+            int acc = 0;
+
+            for(unsigned int i = 0; i < vertices.size(); i++){
+                acc++;
+                vertices[i] = -vertices[i];
+                if(acc == 2){
+                    acc = 0;
+                    i += 3;
+                }
+            }
+
+            mesh.changeVertices(vertices);
         }
 
 
-
-        mat.bind();
-        ab.bind();
-        GLE(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL));
-        ab.unbind();
-        mat.unbind();
+        mesh.draw();
 
         EventManager::eventsCheck();
 

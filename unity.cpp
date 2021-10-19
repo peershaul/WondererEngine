@@ -22,6 +22,7 @@
 
 #include "engine/src/graphics/shaders.cpp"
 #include "engine/src/graphics/material.cpp"
+#include "engine/src/graphics/mesh.cpp"
 
 #include "engine/src/utils/asset_pool.cpp"
 
