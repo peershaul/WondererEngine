@@ -31,9 +31,9 @@ Mesh::Mesh(Material* material, std::vector<unsigned int>& indices, std::vector<f
 }
 
 Mesh::~Mesh(){
-    delete &ab;
-    delete &ib;
-    delete &vb;
+    delete ab;
+    delete ib;
+    delete vb;
 }
 
 Mesh::Mesh(std::vector<unsigned int>& indices, std::vector<float>& vertices,

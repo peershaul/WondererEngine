@@ -1,9 +1,11 @@
 #pragma once
 
 #include "shaders.h"
+#include "texture.h"
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <glm/glm.hpp>
 
 namespace wonderer{
@@ -32,8 +34,14 @@ namespace wonderer{
             void addParam(MaterialParam param);
             void addParam(MaterialParamMatrix param);
 
+            void removeParam(const std::string& name);
+
             void addMatrix(const std::string& name, glm::mat4& mat);
             void addVec(const std::string& name, glm::vec3);
+            void addInt(const std::string& name, int value);
+
+            void addTexture(unsigned int slot, Texture* texture, bool Override = false);
+            void removeTexture(unsigned int slot);
 
             void bind();
             void unbind();
@@ -44,5 +52,6 @@ namespace wonderer{
 
             std::vector<MaterialParam> params;
             std::vector<MaterialParamMatrix> param_matrices;
+            std::unordered_map<unsigned int, Texture*> textures;
     };
 }

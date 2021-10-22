@@ -1,4 +1,9 @@
 // IMGUI Bullshit that I took years to figure out!
+
+
+
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "vendor/imgui/imgui_demo.cpp"
 #include "vendor/imgui/imgui.cpp"
 #include "vendor/imgui/imgui_draw.cpp"
@@ -23,6 +28,7 @@
 #include "engine/src/graphics/shaders.cpp"
 #include "engine/src/graphics/material.cpp"
 #include "engine/src/graphics/mesh.cpp"
+#include "engine/src/graphics/texture.cpp"
 
 #include "engine/src/utils/asset_pool.cpp"
 

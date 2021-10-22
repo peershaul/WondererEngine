@@ -70,4 +70,7 @@ void Window::changeClearColor(glm::vec3 new_color){
     glClearColor(new_color.x, new_color.y, new_color.z, 1.0f);
 }
 
-void Window::destroy() { glfwTerminate(); }
+void Window::destroy() {
+    glfwDestroyWindow(instance.window);
+    glfwTerminate();
+}

@@ -42,8 +42,65 @@ void Material::addParam(MaterialParamMatrix param){
     param_matrices.push_back(param);
 }
 
+void Material::removeParam(const std::string& name){
+    for(std::vector<MaterialParam>::iterator iter = params.begin(); iter != params.end(); iter++)
+        if(iter->name == name){
+            params.erase(iter);
+            return;
+        }
+
+    for(std::vector<MaterialParamMatrix>::iterator iter = param_matrices.begin();
+        iter != param_matrices.end(); iter++)
+
+        if(iter->name == name){
+            param_matrices.erase(iter);
+            return;
+        }
+}
+
+
+
+void Material::addTexture(unsigned int slot, Texture* texture, bool Override){
+    if(Override || textures.size() == 0){
+        textures[slot] = texture;
+        addInt("tex" + std::to_string(slot), slot);
+        return;
+    }
+
+    for(std::pair<unsigned int, Texture*> tex : textures){
+        if(texture == tex.second) {
+            INFO("Texture is already exists in this Material in slot: %d", slot);
+            return;
+        }
+        else if(slot == tex.first){
+            INFO("Texture slot is already ocupied, run this method with Override = true to disable this checker");
+            return;
+        }
+    }
+
+
+    textures[slot] = texture;
+    addInt("tex" + std::to_string(slot), slot);
+
+}
+
+
+void Material::removeTexture(unsigned int slot){
+    textures.erase(slot);
+    removeParam("tex" + std::to_string(slot));
+}
+
+
+
+
 void Material::bind(){
     shader->bind();
+
+    for(std::pair<unsigned int, Texture*> tex : textures){
+        GLE(glActiveTexture(GL_TEXTURE0 + tex.first));
+        tex.second->bind();
+    }
+
     for(MaterialParam param : params)
         bindUniform(param);
 
@@ -52,6 +109,10 @@ void Material::bind(){
 }
 
 void Material::unbind(){
+
+    for(std::pair<unsigned int, Texture*> tex : textures)
+        tex.second->unbind();
+
     shader->unbind();
 }
 
@@ -102,4 +163,8 @@ void Material::addMatrix(const std::string& name, glm::mat4& mat){
 
 void Material::addVec(const std::string& name, glm::vec3 vec){
     addParam(MaterialParam{{vec.x, vec.y, vec.z}, name, MaterialParamType::VEC3});
+}
+
+void Material::addInt(const std::string& name, int value){
+    addParam(MaterialParam{{(float) value}, name, MaterialParamType::INT});
 }

@@ -1,23 +1,5 @@
-#include "../../../engine/include/debug/logger.h"
 
-#include "../../../engine/include/visual/window.h"
-
-#include "../../../engine/include/events/events.h"
-#include "../../../engine/include/events/window_events.h"
-
-#include "../../../engine/include/debug/imgui_helper.h"
-#include "../../../engine/include/debug/imgui_utils.h"
-
-#include "../../../engine/include/graphics/shaders.h"
-#include "../../../engine/include/graphics/material.h"
-#include "../../../engine/include/graphics/mesh.h"
-
-#include "../../../engine/include/utils/asset_pool.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <vector>
-
+#include "../../../wonderer.h"
 
 using namespace wonderer;
 
@@ -73,14 +55,14 @@ int main(){
     test_win.addElement(new ImguiButton("Event is connected to me", &event_parameter));
 
     std::vector<float> vertices = {
-         -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
-          0.5f, -0.5f,   0.0f, 1.0f, 0.0f,
-          0.0f,  0.5f,   0.0f, 0.0f, 1.0f
+         -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,
+          0.5f, -0.5f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
+          0.0f,  0.5f,   0.0f, 0.0f, 1.0f,    0.5f, 1.0f
     };
 
     std::vector<unsigned int> indices = {0, 1, 2};
 
-    std::vector<unsigned int> layout = {2, 3};
+    std::vector<unsigned int> layout = {2, 3, 2};
 
     float startTime = Window::getTime();
     float dt = -1.0f, lastTime;
@@ -91,7 +73,10 @@ int main(){
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(-0.5, 0, 0));
 
+    Texture* tex = AssetPool::getTexture("game/tests/triangle_test/Texture.jpeg", GL_RGB);
+
     Material mat(shader);
+    mat.addTexture(3, tex);
     mat.addMatrix("model", model);
 
     Mesh mesh(&mat, indices, vertices, layout, DrawMode::DYNAMIC_DRAW);
@@ -117,7 +102,7 @@ int main(){
                 vertices[i] = -vertices[i];
                 if(acc == 2){
                     acc = 0;
-                    i += 3;
+                    i += 5;
                 }
             }
 
@@ -138,8 +123,8 @@ int main(){
         startTime = lastTime;
     }
 
-    /*AssetPool::clear();
+    AssetPool::clear();
     EventManager::destroy();
+    Window::destroy();
     Imgui::destroy();
-    Window::destroy();*/
 }

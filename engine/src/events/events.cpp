@@ -63,7 +63,7 @@ bool EventManager::listenerExist(const std::string& name, void(*listener)(std::v
 
 void EventManager::destroy(){
     for(Event* e : events)
-        delete &e;
+        delete e;
 }
 
 

@@ -9,6 +9,9 @@ namespace wonderer{
     class Event {
 
         public:
+
+            virtual inline ~Event() {};
+
             bool is_triggered();
 
             void call();
