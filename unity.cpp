@@ -32,4 +32,7 @@
 
 #include "engine/src/utils/asset_pool.cpp"
 
-#include "game/tests/triangle_test/main.cpp"
+#include "engine/src/scene.cpp"
+#include "engine/src/wonderer.cpp"
+
+#include "game/tests/first_scene/test.cpp"

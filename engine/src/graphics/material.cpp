@@ -61,22 +61,18 @@ void Material::removeParam(const std::string& name){
 
 
 void Material::addTexture(unsigned int slot, Texture* texture, bool Override){
-    if(Override || textures.size() == 0){
-        textures[slot] = texture;
-        addInt("tex" + std::to_string(slot), slot);
-        return;
-    }
 
-    for(std::pair<unsigned int, Texture*> tex : textures){
-        if(texture == tex.second) {
-            INFO("Texture is already exists in this Material in slot: %d", slot);
-            return;
+    if(!Override && textures.size() != 0)
+        for(std::pair<unsigned int, Texture*> tex : textures){
+            if(texture == tex.second) {
+                INFO("Texture is already exists in this Material in slot: %d", slot);
+                return;
+            }
+            else if(slot == tex.first){
+                INFO("Texture slot is already ocupied, run this method with Override = true to disable this checker");
+                return;
+            }
         }
-        else if(slot == tex.first){
-            INFO("Texture slot is already ocupied, run this method with Override = true to disable this checker");
-            return;
-        }
-    }
 
 
     textures[slot] = texture;

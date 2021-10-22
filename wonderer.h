@@ -25,6 +25,9 @@
 
 #include "engine/include/utils/asset_pool.h"
 
+#include "engine/include/scene.h"
+#include "engine/include/wonderer.h"
+
 
 #include <iostream>
 #include <vector>
