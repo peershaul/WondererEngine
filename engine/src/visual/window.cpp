@@ -45,6 +45,7 @@ bool Window::create(int width, int height, const std::string& name, glm::vec3 bg
 
     EventManager::addEvent(new MouseMoveEvent());
     EventManager::addEvent(new WindowResizeEvent());
+    EventManager::addEvent(new KeyPressEvent());
 
     EventManager::subscribeToEvent("window resize", [](std::vector<float> args){
         glViewport(0, 0, args[0], args[1]);

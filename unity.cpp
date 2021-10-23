@@ -14,6 +14,7 @@
 #include "engine/src/debug/error.cpp"
 
 #include "engine/src/visual/window.cpp"
+#include "engine/src/visual/camera.cpp"
 
 #include "engine/src/events/events.cpp"
 #include "engine/src/events/window_events.cpp"

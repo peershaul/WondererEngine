@@ -39,4 +39,18 @@ namespace wonderer{
         private:
             static WindowResizeEvent* instance;
     };
+
+
+    class KeyPressEvent : public Event{
+        public:
+            KeyPressEvent();
+
+            void addCallbackKey(int key);
+            void removeCallbackKey(int key);
+
+            void check();
+            void reset();
+        private:
+            std::vector<int> callbackKeys;
+    };
 }

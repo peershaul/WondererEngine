@@ -90,6 +90,7 @@ void Event::call(){
             (*listeners[i])(args);
 
         triggered = false;
+        reset();
     }
 }
 

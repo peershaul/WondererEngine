@@ -1,4 +1,4 @@
-#include "../../include/events/window_events.h"
+#include "../../../wonderer.h"
 
 using namespace wonderer;
 
@@ -57,4 +57,47 @@ void WindowResizeEvent::callback(GLFWwindow*, int width, int height){
     if(instance == nullptr) return;
     instance->args = {(float) width, (float) height};
     instance->triggered = true;
+}
+
+
+
+
+
+KeyPressEvent::KeyPressEvent() : Event("key press", -1){
+    callbackKeys = {};
+    args = {};
+}
+
+void KeyPressEvent::addCallbackKey(int key){
+    for(int k : callbackKeys)
+        if(key == k){
+            ERR("The key is already in the callback list");
+            return;
+        }
+
+    callbackKeys.push_back(key);
+}
+
+void KeyPressEvent::removeCallbackKey(int key){
+    for(std::vector<int>::iterator iter = callbackKeys.begin(); iter != callbackKeys.end(); iter++)
+        if(*iter == key){
+            callbackKeys.erase(iter);
+            return;
+        }
+
+    WARN("The key you want to delete from the callback list is not found");
+}
+
+
+void KeyPressEvent::check(){
+    for(int key : callbackKeys){
+        if(glfwGetKey(Window::getWindowPointer(), key) == GLFW_PRESS){
+            args.push_back((float) key);
+            if(!triggered) triggered = true;
+        }
+    }
+}
+
+void KeyPressEvent::reset(){
+    args = {};
 }

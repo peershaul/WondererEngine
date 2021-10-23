@@ -19,6 +19,9 @@ namespace wonderer{
 
             static float getTime();
 
+            static inline int getWidth(){ return instance.width; }
+            static inline int getHeight(){ return instance.height; }
+
             static void clear();
 
             Window(Window&) = delete;

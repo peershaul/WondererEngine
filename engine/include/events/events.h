@@ -15,7 +15,8 @@ namespace wonderer{
             bool is_triggered();
 
             void call();
-            virtual void check() = 0;
+            virtual void reset(){};
+            virtual void check(){};
 
             bool addListener(void(*listener)(std::vector<float>));
             bool removeListener(void(*listener)(std::vector<float>));

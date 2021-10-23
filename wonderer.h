@@ -5,6 +5,7 @@
 #include "engine/include/debug/error.h"
 
 #include "engine/include/visual/window.h"
+#include "engine/include/visual/camera.h"
 
 #include "engine/include/events/events.h"
 #include "engine/include/events/window_events.h"
@@ -37,3 +38,5 @@
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/vector_angle.hpp>
