@@ -22,12 +22,13 @@ Material::Material(Shader* shader, std::vector<MaterialParam>& params){
 }
 
 
-void Material::addParam(MaterialParam param){
-    for(MaterialParam p : params)
-        if(param.name == p.name){
-            INFO("a parameter with the name \"%s\" already exists", param.name.c_str());
-            return;
-        }
+void Material::addParam(MaterialParam param, bool Override){
+    if(!Override)
+        for(MaterialParam p : params)
+            if(param.name == p.name){
+                INFO("a parameter with the name \"%s\" already exists", param.name.c_str());
+                return;
+            }
 
     params.push_back(param);
 }
@@ -158,8 +159,8 @@ void Material::addMatrix(const std::string& name, glm::mat4& mat, bool Override)
     addParam(MaterialParamMatrix{glm::value_ptr(mat), name, MaterialParamMatrixType::MAT4}, Override);
 }
 
-void Material::addVec(const std::string& name, glm::vec3 vec){
-    addParam(MaterialParam{{vec.x, vec.y, vec.z}, name, MaterialParamType::VEC3});
+void Material::addVec(const std::string& name, glm::vec3 vec, bool Override){
+    addParam(MaterialParam{{vec.x, vec.y, vec.z}, name, MaterialParamType::VEC3}, Override);
 }
 
 void Material::addInt(const std::string& name, int value){

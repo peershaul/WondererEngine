@@ -31,13 +31,13 @@ namespace wonderer{
             Material(Shader* shader,  std::vector<MaterialParam>& params);
 
             void changeShader(Shader* shader);
-            void addParam(MaterialParam param);
+            void addParam(MaterialParam param, bool Override = false);
             void addParam(MaterialParamMatrix param, bool Override = false);
 
             void removeParam(const std::string& name);
 
             void addMatrix(const std::string& name, glm::mat4& mat, bool Override = false);
-            void addVec(const std::string& name, glm::vec3);
+            void addVec(const std::string& name, glm::vec3 vec, bool Override = false);
             void addInt(const std::string& name, int value);
 
             void addTexture(unsigned int slot, Texture* texture, bool Override = false);

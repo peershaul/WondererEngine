@@ -105,8 +105,8 @@ class TestScene : public Scene{
             Shader* shader = AssetPool::getShader("game/tests/first_scene/default.vert",
                                                   "game/tests/first_scene/default.frag");
 
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(0, 0, 1.0f));
+            model_matrix = glm::mat4(1.0f);
+            model_matrix = glm::translate(model_matrix, pyramid_location);
 
             camera = new Camera(glm::vec3(0));
             camera->genCamMatrix(45, 0.1f, 1000.0f);
@@ -114,8 +114,9 @@ class TestScene : public Scene{
             glm::mat4 camMatrix = camera->updateCamMatrix();
 
             mat = new Material(shader);
-            mat->addMatrix("model", model);
+            mat->addMatrix("model", model_matrix, true);
             mat->addMatrix("camMat", camMatrix, true);
+            mat->addVec("lightDir", glm::vec3(1, 1, 0));
 
 
             mesh = new Mesh(mat, indices, vertices, layout, DrawMode::STATIC_DRAW);
@@ -125,16 +126,26 @@ class TestScene : public Scene{
         void update(float dt){
 
             glm::mat4 camMatrix = camera->updateCamMatrix();
+
+            model_matrix = glm::rotate(model_matrix, glm::radians(rotationSpeed), glm::vec3(0, 1, 0));
+
             mat->addMatrix("camMat", camMatrix, true);
+            mat->addMatrix("model", model_matrix, true);
+            mat->addVec("camPos", camera->Position, true);
 
             mesh->draw();
 
         }
 
-    private:
+        private:
+
+        const float rotationSpeed = 1.0f;
+
         Mesh* mesh = nullptr;
         Camera* camera = nullptr;
         Material* mat = nullptr;
+        glm::mat4 model_matrix;
+        glm::vec3 pyramid_location = glm::vec3(0, 0, -5.0f);
 
 };
 
