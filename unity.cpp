@@ -36,4 +36,4 @@
 #include "engine/src/scene.cpp"
 #include "engine/src/wonderer.cpp"
 
-#include "game/tests/first_scene/test.cpp"
+#include "game/tests/ground_test/main.cpp"

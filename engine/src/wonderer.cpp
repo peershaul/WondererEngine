@@ -28,7 +28,7 @@ void Wonderer::start(){
         return;
 
     Imgui::init("#version 430 core");
-    ImguiWindow telematry_win("Telemertry");
+    ImguiWindow telematry_win("Telematry");
     Imgui::addWindow(&telematry_win);
 
     ImguiTextField* fps_counter = (ImguiTextField*) telematry_win.addElement(new ImguiTextField("FPS: none"));

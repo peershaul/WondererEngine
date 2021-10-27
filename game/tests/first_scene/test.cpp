@@ -2,12 +2,11 @@
 
 using namespace wonderer;
 
+static bool speedMode = false;
+static float camSpeed = 0.05f;
+
 class TestScene : public Scene{
     public:
-
-
-        Camera* getCamera(){ return camera; }
-
 
         void setKeys(){
             KeyPressEvent* key_event = (KeyPressEvent*) EventManager::getEvent("key press");
@@ -21,13 +20,14 @@ class TestScene : public Scene{
             key_event->addCallbackKey(GLFW_KEY_DOWN);
             key_event->addCallbackKey(GLFW_KEY_RIGHT);
             key_event->addCallbackKey(GLFW_KEY_LEFT);
+            key_event->addCallbackKey(GLFW_KEY_SPACE);
 
             EventManager::subscribeToEvent("key press", [](std::vector<float> keys){
 
-                TestScene* test_scene = (TestScene*)(Wonderer::getActiveScene());
+                Scene* test_scene = (TestScene*)(Wonderer::getActiveScene());
                 Camera* cam = test_scene->getCamera();
-                float camSpeed = 0.05f;
                 float rotationSpeed = 1.0f;
+                bool pressed_now = false;
 
                 for(float f_key : keys){
                     int key = (int) f_key;
@@ -57,9 +57,15 @@ class TestScene : public Scene{
                     else if(key == GLFW_KEY_RIGHT)
                         cam->Orientation = glm::rotate(cam->Orientation, glm::radians(-rotationSpeed), cam->Up);
 
-
-
+                    else if(key == GLFW_KEY_SPACE){
+                        if(!speedMode) speedMode = true;
+                        pressed_now = true;
+                    }
                 }
+
+                if(!pressed_now && speedMode) speedMode = false;
+
+                camSpeed = speedMode? 0.1f : 0.05f;
             });
         }
 
@@ -142,7 +148,6 @@ class TestScene : public Scene{
         const float rotationSpeed = 1.0f;
 
         Mesh* mesh = nullptr;
-        Camera* camera = nullptr;
         Material* mat = nullptr;
         glm::mat4 model_matrix;
         glm::vec3 pyramid_location = glm::vec3(0, 0, -5.0f);

@@ -1,6 +1,9 @@
 // IMGUI Bullshit that I took years to figure out!
 #include "vendor/imgui/imgui.h"
 
+// External perlin noise implumentation
+#include "vendor/PerlinNoise/PerlinNoise.hpp"
+
 #include "engine/include/debug/logger.h"
 #include "engine/include/debug/error.h"
 
